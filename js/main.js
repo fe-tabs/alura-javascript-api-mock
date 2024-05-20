@@ -2,6 +2,7 @@ import { api } from "./api.js";
 
 const videosContainer = document.querySelector('ul.videos__container');
 const formulario = document.querySelector('[data-formulario]');
+const searchBtn = document.querySelector('.pesquisar__botao');
 
 listVideos();
 
@@ -23,9 +24,27 @@ async function addVideo(e) {
   window.location.href = '../pages/envio-concluido.html';
 }
 
-formulario.addEventListener("submit", e =>
-  addVideo(e)
-);
+searchBtn.addEventListener("click", e => {
+  console.log('clicked')
+  searchVideo(e);
+});
+
+formulario.addEventListener("submit", e => addVideo(e));
+
+async function searchVideo(e) {
+  e.preventDefault();
+  const search = document.querySelector('.pesquisar__input').value;
+  const videos = await api.searchVideo(search);
+
+while (videosContainer.firstChild) {
+  videosContainer.removeChild(videosContainer.firstChild);
+}
+
+  videos.forEach(video => {
+    videosContainer.appendChild(createVideoCard(video));
+  });
+  
+}
 
 async function listVideos() {
   const videos = await api.listVideos();

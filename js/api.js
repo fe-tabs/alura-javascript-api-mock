@@ -19,6 +19,13 @@ async function addVideo(
     .then(res => res.json());
 }
 
+async function searchVideo(search) {
+  const videos = await fetch(`http://localhost:3000/videos?q=${search}`)
+    .then(res => res.json());
+  
+  return videos;
+}
+
 async function listVideos() {
   const videos = await fetch('http://localhost:3000/videos')
     .then(res => res.json());
@@ -28,5 +35,6 @@ async function listVideos() {
 
 export const api = {
   addVideo,
-  listVideos
+  listVideos,
+  searchVideo
 };
