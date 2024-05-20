@@ -1,3 +1,24 @@
+async function addVideo( 
+  titulo,
+  descricao,
+  url,
+  imagem
+) {
+  const newVideo = await fetch('http://localhost:3000/videos', {
+    method: 'POST',
+    headers: {
+      "Content-type": "application/json"
+    },
+    body: JSON.stringify({
+      titulo: titulo,
+      descricao: `${descricao} visualizações`,
+      url: url,
+      imagem: imagem
+    })
+  })
+    .then(res => res.json());
+}
+
 async function listVideos() {
   const videos = await fetch('http://localhost:3000/videos')
     .then(res => res.json());
@@ -6,5 +27,6 @@ async function listVideos() {
 }
 
 export const api = {
+  addVideo,
   listVideos
 };
