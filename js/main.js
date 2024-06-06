@@ -14,14 +14,18 @@ async function addVideo(e) {
   const url = document.querySelector('[data-url]').value;
   const descricao = Math.floor(Math.random() * 10).toString();
 
-  await api.addVideo(
-    titulo,
-    descricao,
-    url,
-    imagem
-  );
-
-  window.location.href = '../pages/envio-concluido.html';
+  try {
+    await api.addVideo(
+      titulo,
+      descricao,
+      url,
+      imagem
+    );
+  
+    window.location.href = '../pages/envio-concluido.html';    
+  } catch (error) {
+    alert(e);
+  }
 }
 
 searchBtn.addEventListener("click", e => {
@@ -33,24 +37,46 @@ formulario.addEventListener("submit", e => addVideo(e));
 
 async function searchVideo(e) {
   e.preventDefault();
-  const search = document.querySelector('.pesquisar__input').value;
-  const videos = await api.searchVideo(search);
 
-while (videosContainer.firstChild) {
-  videosContainer.removeChild(videosContainer.firstChild);
-}
-
-  videos.forEach(video => {
-    videosContainer.appendChild(createVideoCard(video));
-  });
+  try {
+    const search = document.querySelector('.pesquisar__input').value;
+    const videos = await api.searchVideo(search);
   
+    while (videosContainer.firstChild) {
+      videosContainer.removeChild(videosContainer.firstChild);
+    }
+  
+    videos.forEach(video => {
+      videosContainer.appendChild(createVideoCard(video));
+    });
+
+    if (videos.length == 0) {
+      videosContainer.innerHTML = `
+        <h2 class="mensagem__titulo">Não existem vídeos com esse termo</h2>
+      `;
+    }
+  } catch (error) {
+    videosContainer.innerHTML = `
+      <h2 class="mensagem__titulo">
+        Não foi possível carregar os vídeos!
+      </h2>
+    `;
+  }
 }
 
 async function listVideos() {
-  const videos = await api.listVideos();
-  videos.forEach(video => {
-    videosContainer.appendChild(createVideoCard(video));
-  });
+  try {
+    const videos = await api.listVideos();
+    videos.forEach(video => {
+      videosContainer.appendChild(createVideoCard(video));
+    });
+  } catch (error) {
+    videosContainer.innerHTML = `
+      <h2 class="mensagem__titulo">
+        Não foi possível carregar os vídeos!
+      </h2>
+    `;
+  }
 }
 
 function createVideoCard(data) {

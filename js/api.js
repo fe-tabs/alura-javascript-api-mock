@@ -17,6 +17,10 @@ async function addVideo(
     })
   })
     .then(res => res.json());
+
+  if (!newVideo) {
+    throw new Error('Não foi possível salvar o vídeo');
+  }
 }
 
 async function searchVideo(search) {
